@@ -11,15 +11,19 @@ const customFields = {
 };
 
 passport.use(
-  new localStrategy(customFields, function verify(username, password, done) {
+  new localStrategy(customFields, async function verify(
+    username,
+    password,
+    done,
+  ) {
     try {
-      const user = userModel.findUserByName(username);
+      const user = await userModel.findUserByEmail(username);
+      console.log(user);
       if (!user) {
         return done(null, false, { message: "Incorrect username" });
       } else {
         const hashedPassword = user.password;
-        const passwordMatches = bcrypt.compare(password, hashedPassword);
-
+        const passwordMatches = await bcrypt.compare(password, hashedPassword);
         if (!passwordMatches) {
           return done(null, false, { message: "Incorrect password" });
         }
