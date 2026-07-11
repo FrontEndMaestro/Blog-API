@@ -1,7 +1,8 @@
 import passport from "passport";
 
 import { Strategy as localStrategy } from "passport-local";
-import * as userModel from "..//models/user";
+import { Strategy as jwtStrategy, ExtractJwt } from "passport-jwt";
+import * as userModel from "..//models/user.js";
 
 import bcrypt from "bcrypt";
 
@@ -34,4 +35,21 @@ passport.use(
       console.log(error);
     }
   }),
+);
+
+passport.use(
+  new jwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: process.env.SECRET,
+    },
+    async function (payload, done) {
+      const user = await userModel.getUserById(payload.id);
+      if (user) {
+        return done(null, user);
+      } else {
+        return done(null, false);
+      }
+    },
+  ),
 );
