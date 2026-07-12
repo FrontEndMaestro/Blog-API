@@ -80,9 +80,15 @@ const Signup = [
 
 const getUser = [
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    console.log(req.user);
+  async (req, res) => {
     const userId = req.params.userId;
+    const user = await userModel.getUserById(Number(userId));
+    if (user == null) {
+      return res.json({ message: "User not found" });
+    }
+    res.json({ user });
+  },
+];
 
 const updateUser = [
   validations,
