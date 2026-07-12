@@ -1,13 +1,18 @@
 import express from "express";
 import { userRouter } from "./routes/user.js";
 import { authRouter } from "./routes/auth.js";
+import { postRouter } from "./routes/post.js";
+import { commentRouter } from "./routes/comment.js";
+import { PrismaClient, Prisma } from "./generated/prisma/client.js";
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/user", userRouter);
+app.use("/users", userRouter);
 app.use("/auth", authRouter);
+app.use("/posts", postRouter);
+app.use("/comments", commentRouter);
 
 app.use((err, req, res, next) => {
   console.log(err);
