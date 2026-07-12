@@ -84,9 +84,24 @@ const getUser = [
     console.log(req.user);
     const userId = req.params.userId;
 
-    console.log(userId);
-    res.json({ message: "You have found the user" });
+const updateUser = [
+  validations,
+  async function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const { name, email, password } = matchedData(req);
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const userData = {
+      id: req.params.userId,
+      name: name,
+      email: email,
+      password: hashedPassword,
+    };
+    const user = await userModel.updateUser(userData);
+    res.json(user);
   },
 ];
 
-export { Signup, getUser };
+export { Signup, getUser, updateUser };

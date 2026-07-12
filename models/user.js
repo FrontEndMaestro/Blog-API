@@ -38,4 +38,18 @@ async function getUserById(userId) {
   return user;
 }
 
-export { createUser, findUserByName, findUserByEmail, getUserById };
+async function updateUser(userData) {
+  const user = await prisma.user.update({
+    where: {
+      id: Number(userData.id),
+    },
+    data: {
+      name: userData.name,
+      email: userData.email,
+      password: userData.password,
+    },
+  });
+  return user;
+}
+
+export { createUser, findUserByName, findUserByEmail, getUserById, updateUser };
