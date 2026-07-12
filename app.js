@@ -15,7 +15,15 @@ app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
 
 app.use((err, req, res, next) => {
-  console.log(err);
+  console.warn(err);
+
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === "P2025") {
+      return res.json({ message: "record could not be found" });
+    }
+    return res.json({ message: "Database unavailable" });
+  }
+
   res.status(500).json({
     message: "Something broke",
   });
