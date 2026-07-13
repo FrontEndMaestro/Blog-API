@@ -54,10 +54,20 @@ async function getPostComments(postId) {
   return comments;
 }
 
+async function getComment(commentId) {
+  const comment = await prisma.comment.findFirst({
+    where: {
+      id: Number(commentId),
+    },
+  });
+  return comment;
+}
+
 export {
   createComment,
   updateComment,
   deleteComment,
   likeComment,
   getPostComments,
+  getComment,
 };
