@@ -24,9 +24,11 @@ app.use((err, req, res, next) => {
     return res.json({ message: "Database unavailable" });
   }
 
-  res.status(500).json({
-    message: "Something broke",
-  });
+  res.status(err.status || 500).json(
+    err.message || {
+      message: "Something broke",
+    },
+  );
 });
 
 app.listen(3000, (error) => {
