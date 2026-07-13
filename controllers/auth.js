@@ -38,9 +38,7 @@ const logIn = [
     passport.authenticate("local", function (err, user, info) {
       if (err) {
         console.error(err);
-        return res
-          .status(500)
-          .json({ message: "Authentication not available" });
+        next(err);
       }
       if (!user) {
         return res.status(401).json({ message: info.message });
