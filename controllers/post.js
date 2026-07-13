@@ -4,6 +4,7 @@ import passport from "passport";
 import "../config/passport.js";
 import * as postModel from "..//models/post.js";
 import * as userModel from "..//models/user.js";
+import { CustomAuthorizationError } from "../errors/CustomAuthorizationError.js";
 import { json } from "express";
 
 const validations = [
@@ -29,7 +30,7 @@ const createPost = [
 
 async function getPost(req, res) {
   const postId = req.params.postId;
-  
+
   const post = await postModel.getPost(postId);
   if (!post) {
     return res.json({ message: "Post not found" });
@@ -49,30 +50,56 @@ async function likePost(req, res) {
   res.json(post);
 }
 
-async function publishPost(req, res) {
-  const postId = req.params.postId;
-  const post = await postModel.publishPost(postId);
-  res.json(post);
-}
+const publishPost = [
+  passport.authenticate("jwt", { session: false }),
+  async function (req, res) {
+    const postId = req.params.postId;
+    const getPost = await postModel.getPost(postId);
+    if (getPost.authorId == req.user.id) {
+      const post = await postModel.publishPost(postId);
+      res.json(post);
+    } else {
+      throw new CustomAuthorizationError("Access denied");
+    }
+  },
+];
 
-async function updatePost(req, res) {
-  const postData = {
-    id: req.params.postId,
-    title: req.body.title,
-    text: req.body.text,
-    pictureUrl: req.body.pictureUrl,
-    published: req.body.published,
-  };
+const updatePost = [
+  passport.authenticate("jwt", { session: false }),
+  async function (req, res) {
+    const postId = req.params.postId;
+    const getPost = await postModel.getPost(postId);
+    if (getPost.authorId == req.user.id) {
+      const postData = {
+        id: req.params.postId,
+        title: req.body.title,
+        text: req.body.text,
+        pictureUrl: req.body.pictureUrl,
+        published: req.body.published,
+      };
 
-  const post = await postModel.updatePost(postData);
-  res.json({ message: "Post updated Sucessfully" });
-}
+      const post = await postModel.updatePost(postData);
+      res.json({ message: "Post updated Sucessfully" });
+    } else {
+      throw new CustomAuthorizationError("Access denied");
+    }
+  },
+];
 
-async function deletePost(req, res) {
-  const postId = req.params.postId;
-  await postModel.deletePost(postId);
-  res.json({ message: "post delete successfully" });
-}
+const deletePost = [
+  passport.authenticate("jwt", { session: false }),
+  async function (req, res) {
+    const postId = req.params.postId;
+    const getPost = await postModel.getPost(postId);
+    if (getPost.authorId == req.user.id) {
+      const postId = req.params.postId;
+      await postModel.deletePost(postId);
+      res.json({ message: "post delete successfully" });
+    } else {
+      throw new CustomAuthorizationError("Access denied");
+    }
+  },
+];
 
 async function getAllUserPosts(req, res) {
   const userId = req.params.userId;
