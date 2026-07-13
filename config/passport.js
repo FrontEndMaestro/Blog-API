@@ -44,7 +44,7 @@ passport.use(
       secretOrKey: process.env.SECRET,
     },
     async function (payload, done) {
-      const user = await userModel.getUserById(payload.id);
+      const user = await userModel.getUserById(payload.userId);
       if (user) {
         return done(null, user);
       } else {
