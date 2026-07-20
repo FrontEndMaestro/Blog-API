@@ -6,4 +6,4 @@ class CustomAuthorizationError extends Error {
   }
 }
 
-module.exports = CustomAuthorizationError;
+export { CustomAuthorizationError };
