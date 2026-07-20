@@ -109,7 +109,7 @@ async function getAllUserPosts(req, res) {
 
 async function getPostComment(req, res) {
   const comments = await postModel.getPostComment(req.params.postId);
-  res.json({ comments });
+  res.json( comments );
 }
 
 export {

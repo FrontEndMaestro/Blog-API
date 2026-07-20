@@ -48,9 +48,8 @@ const updateComment = [
       const comment = await commentModel.updateComment({ id: commentId, text });
 
       return res.json({ comment });
-    }
-    else{
-        throw new CustomAuthorizationError("Access denied")
+    } else {
+      throw new CustomAuthorizationError("Access denied");
     }
   },
 ];
@@ -65,14 +64,14 @@ const deleteComment = [
       await commentModel.deleteComment(req.params.commentId);
       res.json({ message: "Comment deleted successfully" });
     } else {
-      throw new CustomAuthorizationError("Access denied")
+      throw new CustomAuthorizationError("Access denied");
     }
   },
 ];
 
 async function likeComment(req, res) {
   const comment = await commentModel.likeComment(req.params.commentId);
-  res.json({ comment });
+  res.json(comment);
 }
 
 export { createComment, updateComment, deleteComment, likeComment };
