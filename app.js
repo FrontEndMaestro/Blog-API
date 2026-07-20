@@ -21,7 +21,7 @@ app.use((err, req, res, next) => {
 
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === "P2025") {
-      return res.json({ message: "record could not be found" });
+      return res.json({ message: "Record could not be found" });
     }
     return res.json({ message: "Database unavailable" });
   }
