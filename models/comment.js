@@ -50,6 +50,13 @@ async function getPostComments(postId) {
     where: {
       postId: Number(postId),
     },
+    include: {
+      author: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
   return comments;
 }

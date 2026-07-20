@@ -24,7 +24,15 @@ async function getPost(postId) {
 }
 
 async function getAllPost() {
-  const posts = await prisma.post.findMany();
+  const posts = await prisma.post.findMany({
+    include: {
+      author: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
   return posts;
 }
 
