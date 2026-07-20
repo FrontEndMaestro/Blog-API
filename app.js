@@ -4,8 +4,10 @@ import { authRouter } from "./routes/auth.js";
 import { postRouter } from "./routes/post.js";
 import { commentRouter } from "./routes/comment.js";
 import { PrismaClient, Prisma } from "./generated/prisma/client.js";
+import cors from "cors";
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
